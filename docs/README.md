@@ -56,6 +56,23 @@ This guide assumes you have a fresh Ubuntu server.
     nano docker/openwebui/.env
     ```
 
+## Security Setup (Optional but Recommended)
+
+For a new VPS, it is best practice to create a non-root sudo user and disable root login. A helper script is provided:
+
+1.  **Run the security setup script:**
+    ```bash
+    chmod +x scripts/setup-security.sh
+    sudo ./scripts/setup-security.sh
+    ```
+    This interactive script will:
+    *   Create a new user (you specify the name).
+    *   Add the user to `sudo` and `docker` groups.
+    *   Copy your current root SSH keys to the new user.
+    *   (Optionally) Disable root login and password authentication in SSH.
+
+2.  **Verify access:** Open a new terminal and try to SSH in as the new user *before* closing your current session.
+
 ## Docker Applications
 
 This setup includes `docker-compose.yml` configurations for the following applications:
