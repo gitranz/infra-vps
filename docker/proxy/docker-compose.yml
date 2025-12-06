@@ -3,12 +3,12 @@ services:
     image: 'docker.io/jc21/nginx-proxy-manager:latest'
     restart: unless-stopped
     ports:
-      - '80:80'
-      - '81:81'
-      - '443:443'
+      - '${HTTP_PORT}:80'
+      - '${ADMIN_PORT}:81'
+      - '${HTTPS_PORT}:443'
     volumes:
-      - /srv/nginx/data:/data
-      - /srv/nginx/letsencrypt:/etc/letsencrypt
+      - ${NGINX_DATA_PATH}:/data
+      - ${NGINX_LETSENCRYPT_PATH}:/etc/letsencrypt
     networks:
       - default
 
