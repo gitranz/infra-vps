@@ -15,3 +15,6 @@ services:
 networks:
   default:
     name: nginx_proxymanager_default
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16

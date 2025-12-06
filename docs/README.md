@@ -44,9 +44,19 @@ This guide assumes you have a fresh Ubuntu server.
     ```
     *Note: The script will add your current user to the `docker` group. You will need to log out and log back in for this change to take effect.*
 
-4.  **Log out and log back in** to your VPS.
+4.  **Set up AnythingLLM persistent volume permissions (Crucial for AnythingLLM):**
+    AnythingLLM's container expects its mounted `/app/server/storage` directory to be owned by `UID=1001` and `GID=1001`. The `bootstrap.sh` script does not set this automatically for new application volumes.
+    After running `bootstrap.sh` and before starting AnythingLLM, you must manually set the correct permissions:
+    ```bash
+    sudo mkdir -p /srv/anythingllm/storage
+    sudo chown -R 1001:1001 /srv/anythingllm
+    sudo chmod -R 777 /srv/anythingllm/storage
+    ```
+    This ensures the `anythingllm` container has the necessary read/write access to its persistent storage volume.
 
-5.  **Configure environment variables:**
+5.  **Log out and log back in** to your VPS.
+
+6.  **Configure environment variables:**
     Copy the example environment files and modify them as needed:
     ```bash
     cp docker/n8n/.env.example docker/n8n/.env

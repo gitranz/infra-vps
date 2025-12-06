@@ -3,6 +3,9 @@ version: '3.8'
 services:
   anythingllm:
     image: mintplexlabs/anythingllm
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile.debug
     container_name: anythingllm
     restart: unless-stopped
     cap_add:
@@ -10,8 +13,10 @@ services:
     environment:
       - STORAGE_DIR=/app/server/storage
       - SERVER_PORT=3001
-      - UID=1000
-      - GID=1000
+      - UID=1001
+      - GID=1001
+    ports:
+      - "3001:3001"
     volumes:
       - /srv/anythingllm/storage:/app/server/storage
       - ./.env:/app/server/.env
