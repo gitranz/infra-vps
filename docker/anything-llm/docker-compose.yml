@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  anythingllm:
+    image: mintplexlabs/anythingllm
+    container_name: anythingllm
+    restart: unless-stopped
+    cap_add:
+      - SYS_ADMIN
+    environment:
+      - STORAGE_DIR=/app/server/storage
+      - SERVER_PORT=3001
+      - UID=1000
+      - GID=1000
+    volumes:
+      - ./storage:/app/server/storage
+      - ./.env:/app/server/.env
+    networks:
+      - default
+      - nginx_proxymanager_default
+
+networks:
+  nginx_proxymanager_default:
+    external: true
