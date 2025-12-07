@@ -14,7 +14,7 @@ services:
     volumes:
       # Map the local configuration directory to the container's config directory.
       # This stores VS Code settings, extensions, and user data.
-      - ./config:/config
+      - /srv/vscode/config:/config
       # Map the host's workspace directory to the container's workspace.
       # This allows direct access to all project files on the host machine.
       - /home/chrisadmin/workspace:/workspace

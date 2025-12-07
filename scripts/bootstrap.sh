@@ -32,6 +32,7 @@ sudo ufw --force enable # Use --force to avoid interactive prompt
 sudo mkdir -p /srv/n8n/data
 sudo mkdir -p /srv/ollama/data
 sudo mkdir -p /srv/openwebui/data
+sudo mkdir -p /srv/anythingllm/storage
 sudo mkdir -p /srv/nginx/data
 sudo mkdir -p /srv/nginx/letsencrypt
 sudo mkdir -p /srv/vscode/config
