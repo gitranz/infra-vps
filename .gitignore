@@ -1,3 +1,5 @@
 .env
 .DS_Store
 *.log
+docker/vscode/config/*
+!docker/vscode/config/.gitkeep

@@ -1,0 +1,29 @@
+---
+services:
+  code-server:
+    image: lscr.io/linuxserver/code-server:latest
+    container_name: code-server
+    environment:
+      - PUID=${PUID:-1001}
+      - PGID=${PGID:-1001}
+      - TZ=${TZ:-Etc/UTC}
+      # CHANGE THESE PASSWORDS!
+      - PASSWORD=${CODE_SERVER_PASSWORD:-changeme}
+      - SUDO_PASSWORD=${CODE_SERVER_SUDO_PASSWORD:-changeme}
+      - DEFAULT_WORKSPACE=/workspace
+    volumes:
+      # Map the local configuration directory to the container's config directory.
+      # This stores VS Code settings, extensions, and user data.
+      - ./config:/config
+      # Map the host's workspace directory to the container's workspace.
+      # This allows direct access to all project files on the host machine.
+      - /home/chrisadmin/workspace:/workspace
+    ports:
+      - 8443:8443
+    restart: unless-stopped
+    networks:
+      - nginx_proxymanager_default
+
+networks:
+  nginx_proxymanager_default:
+    external: true

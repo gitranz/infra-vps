@@ -34,5 +34,6 @@ sudo mkdir -p /srv/ollama/data
 sudo mkdir -p /srv/openwebui/data
 sudo mkdir -p /srv/nginx/data
 sudo mkdir -p /srv/nginx/letsencrypt
+sudo mkdir -p /srv/vscode/config
 
 echo "Docker, UFW, and /srv directories setup complete. Please log out and back in for Docker group changes to take effect."
