@@ -1,5 +1,8 @@
 # Additional Notes and Considerations
 ...
+# vscode Github Project
+used repo:
+https://github.com/linuxserver/docker-code-server
 
 
 # Installation of every ai code cli npm package installation on sudo user
