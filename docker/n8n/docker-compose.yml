@@ -21,7 +21,6 @@ services:
     volumes:
       - /srv/n8n/data:/home/node/.n8n
     networks:
-      - default
       - nginx_proxymanager_default
 
 networks:
