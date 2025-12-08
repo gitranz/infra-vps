@@ -1,11 +1,16 @@
-# Additional Notes and Considerations
-...
+# TOC
+
+1. vscode server container
+2. installation of every ai code assistant
+
+
+
 # vscode Github Project
 used repo:
 https://github.com/linuxserver/docker-code-server
 
 
-# Installation of every ai code cli npm package installation on sudo user
+# Installation of AI Code CLI npm package with sudo User
 
 Below is a **copy-pasteable step-by-step command list** for installing the **Gemini CLI** under a regular sudo-capable user, using a **user-local npm global directory** so you can run `gemini` **without sudo**.
 
@@ -14,7 +19,6 @@ I’ll assume:
 * You’re logged in as a non-root user (with sudo rights).
 * Node.js (v18+) and npm are already installed. If not, I include a Node install option too.
 
----
 
 ## 1️⃣ (Optional) Install Node.js LTS via NodeSource
 
