@@ -22,8 +22,5 @@ services:
       - 8443:8443
     restart: unless-stopped
     networks:
-      - nginx_proxymanager_default
-
-networks:
-  nginx_proxymanager_default:
-    external: true
+      - default
+    
