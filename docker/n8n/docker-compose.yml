@@ -1,14 +1,34 @@
 version: '3.8'
 
 services:
-  n8n:
-    image: docker.n8n.io/n8nio/n8n:latest
+  tailscale-n8n:
+    image: tailscale/tailscale:latest
+    hostname: n8n
+    container_name: tailscale-n8n
     restart: always
-    ports:
-      - "5678:5678"
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_HOSTNAME=n8n
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+      - TS_USERSPACE=false
+    volumes:
+      - /srv/n8n/ts/state:/var/lib/tailscale
+      - /srv/n8n/ts/config:/config
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:2.0.1
+    restart: always
+    network_mode: service:tailscale-n8n
+    depends_on:
+      - tailscale-n8n
     environment:
       - N8N_HOST=${N8N_HOST}
-      - N8N_PORT=${N8N_PORT}
+      - N8N_PORT=5678
       - N8N_PROTOCOL=${N8N_PROTOCOL}
       - NODE_ENV=${NODE_ENV}
       - WEBHOOK_URL=${WEBHOOK_URL}
