@@ -20,12 +20,31 @@ services:
       - NET_ADMIN
       - SYS_MODULE
 
+  postgres:
+    image: postgres:16-alpine
+    hostname: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - /srv/n8n/db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   n8n:
     image: docker.n8n.io/n8nio/n8n:2.0.1
     restart: always
     network_mode: service:tailscale-n8n
     depends_on:
-      - tailscale-n8n
+      tailscale-n8n:
+        condition: service_started
+      postgres:
+        condition: service_healthy
     environment:
       - N8N_HOST=${N8N_HOST}
       - N8N_PORT=5678
@@ -38,7 +57,12 @@ services:
       - N8N_SECURE_COOKIE=${N8N_SECURE_COOKIE}
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       - N8N_RUNNERS_ENABLED=true
-      - DB_SQLITE_POOL_SIZE=5
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${DB_POSTGRESDB_DATABASE}
+      - DB_POSTGRESDB_USER=${DB_POSTGRESDB_USER}
+      - DB_POSTGRESDB_PASSWORD=${DB_POSTGRESDB_PASSWORD}
       - EXECUTIONS_DATA_PRUNE=${EXECUTIONS_DATA_PRUNE}
       - EXECUTIONS_DATA_MAX_AGE=${EXECUTIONS_DATA_MAX_AGE}
     volumes:
