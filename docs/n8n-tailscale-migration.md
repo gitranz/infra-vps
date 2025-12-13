@@ -20,11 +20,22 @@ This guide documents the conversion of the n8n service to a "zero-trust" deploym
 
 ### 1. Prepare Host Directories
 
-Ensure the following directories exist for persistent state and config:
+Ensure the following directories exist and have the correct permissions.
+*   `n8n` runs as UID 1000.
+*   `postgres` (Alpine) runs as UID 70.
 
 ```bash
-mkdir -p /srv/n8n/ts/state
-mkdir -p /srv/n8n/ts/config
+# Create directories
+sudo mkdir -p /srv/n8n/ts/state
+sudo mkdir -p /srv/n8n/ts/config
+sudo mkdir -p /srv/n8n/db
+
+# Set permissions
+# n8n data directory (UID 1000)
+sudo chown -R 1000:1000 /srv/n8n/data
+
+# Postgres data directory (UID 70 for Alpine)
+sudo chown -R 70:70 /srv/n8n/db
 ```
 
 ### 2. Update Environment Variables
@@ -36,6 +47,12 @@ Edit your `docker/n8n/.env` file (create it if it doesn't exist, based on `.env.
 
 # Your Tailscale Auth Key
 TS_AUTHKEY=tskey-auth-xxxxx
+
+# Database Configuration (Postgres)
+# Use a strong password!
+POSTGRES_USER=n8n
+POSTGRES_PASSWORD=mysecretpassword
+POSTGRES_DB=n8n
 
 # Your n8n Hostname on Tailscale
 # MUST match: <hostname>.<tailnet-name>.ts.net

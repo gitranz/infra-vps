@@ -37,7 +37,7 @@ services:
       retries: 5
 
   n8n:
-    image: docker.n8n.io/n8nio/n8n:2.0.1
+    image: docker.n8n.io/n8nio/n8n:2.0.2
     restart: always
     network_mode: service:tailscale-n8n
     depends_on:
@@ -57,13 +57,15 @@ services:
       - N8N_SECURE_COOKIE=${N8N_SECURE_COOKIE}
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       - N8N_RUNNERS_ENABLED=true
+      - EXECUTIONS_DATA_PRUNE=${EXECUTIONS_DATA_PRUNE}
+      - EXECUTIONS_DATA_MAX_AGE=${EXECUTIONS_DATA_MAX_AGE}
+      
+      # Database Configuration (Mapped from POSTGRES_* vars)
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
       - DB_POSTGRESDB_PORT=5432
-      - DB_POSTGRESDB_DATABASE=${DB_POSTGRESDB_DATABASE}
-      - DB_POSTGRESDB_USER=${DB_POSTGRESDB_USER}
-      - DB_POSTGRESDB_PASSWORD=${DB_POSTGRESDB_PASSWORD}
-      - EXECUTIONS_DATA_PRUNE=${EXECUTIONS_DATA_PRUNE}
-      - EXECUTIONS_DATA_MAX_AGE=${EXECUTIONS_DATA_MAX_AGE}
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - /srv/n8n/data:/home/node/.n8n
