@@ -79,7 +79,16 @@ docker compose up -d
 
 ### 4. Configure Tailscale Serve (First Run)
 
+After the initial installation and first run, the `tailscale-n8n` container will be active.
 Because the `serve.json` config does not exist yet, we need to generate it. The `tailscale-n8n` container will start but might not be serving traffic yet.
+
+To properly configure Tailscale Serve, copy the `serve.json` file from the `/docs` directory (where this guide is located) to `/srv/n8n/ts/config/`.
+
+```bash
+sudo cp docs/serve.json /srv/n8n/ts/config/
+```
+
+With Tailscale MagicDNS enabled, it takes up to 10 seconds after the first run for the Let's Encrypt certificate to be created and stored.
 
 1.  **Configure Serve**: Tell Tailscale to listen on HTTPS 443 and proxy to n8n on localhost:5678.
 
@@ -87,6 +96,20 @@ Because the `serve.json` config does not exist yet, we need to generate it. The 
     docker exec tailscale-n8n tailscale serve --https=443 tcp://localhost:5678
     ```
     *Note: We use `localhost` because n8n shares the network namespace.*
+
+    ### Best Practice: Configuration Persistence
+    To ensure your Tailscale Serve configuration survives container restarts and updates, follow this workflow to persist the state:
+
+    1.  **Start Container**: Ensure the container is running.
+    2.  **Configure Serve**: Use `http` for web services to allow Layer 7 handling.
+        ```bash
+        docker exec tailscale-n8n tailscale serve --https=443 http://localhost:5678
+        ```
+    3.  **Persist Configuration**: Export the running config to the mounted JSON file.
+        ```bash
+        # Write directly to the mapped /config volume inside the container
+        docker exec tailscale-n8n sh -c "tailscale serve status --json > /config/serve.json"
+        ```
 
 2.  **Verify**: Check status.
 
