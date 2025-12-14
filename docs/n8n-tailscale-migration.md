@@ -126,6 +126,49 @@ With Tailscale MagicDNS enabled, it takes up to 10 seconds after the first run f
 
     Now, if you restart the container, `TS_SERVE_CONFIG=/config/serve.json` will load this configuration automatically.
 
+## Optional: Public Exposure (Funnel)
+
+If you need to expose n8n webhooks to the public internet (e.g., for **Discord**, Slack, or Stripe webhooks), you must enable **Tailscale Funnel**.
+
+### 1. Update serve.json
+Edit the configuration file on the host: `/srv/n8n/ts/config/serve.json`.
+Locate the `"AllowFunnel"` section and set it to `true` for your domain.
+
+```json
+"AllowFunnel": {
+    "${TS_CERT_DOMAIN}:443": true
+}
+```
+
+### 2. Update Tailscale ACLs
+You must explicitly allow Funnel in your Tailscale Admin Console (Access Controls). Add the `nodeAttrs` block:
+
+```json
+"nodeAttrs": [
+  {
+    "target": ["auto"],
+    "attr": ["funnel"]
+  }
+]
+```
+*Note: Depending on your policy, you might target specific tags instead of "auto".*
+
+### 3. Restart Services (Critical Order)
+When restarting, you must ensure `n8n` re-attaches to the `tailscale-n8n` network namespace correctly.
+
+```bash
+# Restart tailscale sidecar -> Wait -> Restart n8n
+docker compose -f docker/n8n/docker-compose.yml restart tailscale-n8n
+sleep 5
+docker compose -f docker/n8n/docker-compose.yml restart n8n
+```
+
+### 4. Use Production Webhook URLs
+For external services like Discord:
+*   **Do not** use the `/webhook-test/...` URL (which requires the editor to be open).
+*   Use the **Production** URL (e.g., `/webhook/...`).
+*   Ensure the workflow is **Active** in n8n.
+
 ## Troubleshooting
 
 ### HTTPS / Certificate Issues

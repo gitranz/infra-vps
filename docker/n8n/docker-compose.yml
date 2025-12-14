@@ -11,7 +11,7 @@ services:
       - TS_HOSTNAME=n8n
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_SERVE_CONFIG=/config/serve.json
-      - TS_USERSPACE=false
+      - TS_USERSPACE=true
     volumes:
       - /srv/n8n/ts/state:/var/lib/tailscale
       - /srv/n8n/ts/config:/config
