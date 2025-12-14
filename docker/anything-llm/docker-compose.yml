@@ -22,8 +22,3 @@ services:
       - ./.env:/app/server/.env
     networks:
       - default
-      - nginx_proxymanager_default
-
-networks:
-  nginx_proxymanager_default:
-    external: true
